@@ -110,7 +110,7 @@ void Game::Run()
 
 void Game::Draw()
 {
-	float color[] = { totalTime, 0.1f, 0.1f, 1.0f };
+	float color[] = { /*totalTime*/ 0.1, 0.1f, 0.1f, 1.0f };
 	context->ClearRenderTargetView(rtv, color);
 
 	for (GameComponent* comp : gameComponents)

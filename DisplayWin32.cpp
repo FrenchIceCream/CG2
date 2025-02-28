@@ -70,9 +70,12 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 	}
 }
 
-DisplayWin32::DisplayWin32(long clientHeight, long clientWidth, HINSTANCE hInstance, LPCWSTR appName)
+DisplayWin32::DisplayWin32(long clientWidth, long clientHeight, HINSTANCE hInstance, LPCWSTR appName)
 {
 	WNDCLASSEX wc;
+
+	this->clientHeight = clientHeight;
+	this->clientWidth = clientWidth;
 
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;

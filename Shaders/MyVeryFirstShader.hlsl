@@ -1,3 +1,14 @@
+struct ConstantData
+{
+	float4 offset;
+};
+
+cbuffer ConstBuf: register(b0)
+{
+	ConstantData ConstData;
+};
+
+
 struct VS_IN
 {
 	float4 pos : POSITION0;
@@ -14,7 +25,7 @@ PS_IN VSMain( VS_IN input )
 {
 	PS_IN output = (PS_IN)0;
 	
-	output.pos = input.pos;
+	output.pos = input.pos + ConstData.offset;
 	output.col = input.col;
 	
 	return output;
@@ -23,8 +34,11 @@ PS_IN VSMain( VS_IN input )
 float4 PSMain( PS_IN input ) : SV_Target
 {
 	float4 col = input.col;
-#ifdef TEST
-	if (input.pos.x > 400) col = TCOLOR;
+#ifdef LEFT
+	col = float4(0.f, 0.f, 1.f, 1.f);
+#else
+	col = float4(1.f, 0.f, 0.f, 1.f);
 #endif
+
 	return col;
 }

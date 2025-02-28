@@ -5,14 +5,16 @@
 #include <chrono>
 #include "Game.h"
 #include "TriangleComponent.h"
+#include "PaddleComponent.h"
 #include "GameComponent.h"
 
 
 int main()
 {
-	Game * MyGame = new Game(L"My3DApp", 800, 800);
+	Game * MyGame = new Game(L"Pong", 1000, 600);
 
-	MyGame->gameComponents.push_back(new TriangleComponent(MyGame));
+	MyGame->gameComponents.push_back(new PaddleComponent(MyGame, true));
+	MyGame->gameComponents.push_back(new PaddleComponent(MyGame, false));
 
 	MyGame->Run();
 
