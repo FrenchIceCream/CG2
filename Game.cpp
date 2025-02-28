@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Game.h"
 #include "GameComponent.h"
+#include "PaddleComponent.h"
 
 Game::Game(LPCWSTR applicationName, long clientWidth, long clientHeight)
 {
@@ -131,6 +132,50 @@ void Game::MessageHandler()
 	// If windows signals to end the application then exit out.
 	if (msg.message == WM_QUIT) {
 		isExitRequested = true;
+	}
+	if (msg.message == VK_UP)
+	{
+		for (GameComponent* comp : gameComponents)
+		{
+			if (auto c = dynamic_cast<PaddleComponent*>(comp))
+			{
+				if (!c->IsLeft())
+					c->AddY(0.03);
+			}
+		}
+	}
+	if (msg.message == VK_DOWN)
+	{
+		for (GameComponent* comp : gameComponents)
+		{
+			if (auto c = dynamic_cast<PaddleComponent*>(comp))
+			{
+				if (!c->IsLeft())
+					c->AddY(-0.03);
+			}
+		}
+	}
+	if (msg.message == (unsigned int)87)
+	{
+		for (GameComponent* comp : gameComponents)
+		{
+			if (auto c = dynamic_cast<PaddleComponent*>(comp))
+			{
+				if (c->IsLeft())
+					c->AddY(0.03);
+			}
+		}
+	}
+	if (msg.message == 88)	//вот тут почему-то на 83 не реагирует - разобраться почему
+	{
+		for (GameComponent* comp : gameComponents)
+		{
+			if (auto c = dynamic_cast<PaddleComponent*>(comp))
+			{
+				if (c->IsLeft())
+					c->AddY(-0.03);
+			}
+		}
 	}
 }
 

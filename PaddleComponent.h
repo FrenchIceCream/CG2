@@ -31,5 +31,10 @@ public:
 	void Draw() override;
 	virtual void DestroyResources() override;
 	virtual void Update() override;
+
+	bool IsLeft() { return isLeft; };
+
+	void AddY(float y) { data.offset.y += y; };
+	void AddX(float x) { data.offset.x += x; };
 };
 

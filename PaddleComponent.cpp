@@ -40,12 +40,9 @@ void PaddleComponent::Initialize()
 
 
 
-	D3D_SHADER_MACRO Shader_Macros[] = { "LEFT", "1", nullptr, nullptr };
+	D3D_SHADER_MACRO Shader_Macros[] = { isLeft? "LEFT": "RIGHT", "1", nullptr, nullptr};
 	ID3DBlob* errorPixelCode;
-	if (isLeft)
 		res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", Shader_Macros /*macros*/, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
-	else
-		res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", nullptr, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
 
 	game->device->CreateVertexShader(
 		vertexBC->GetBufferPointer(),
