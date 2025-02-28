@@ -1,2 +1,2 @@
-# CG1
+# CG2
  Computer Graphics
