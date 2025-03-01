@@ -59,6 +59,7 @@ void Game::CreateBackBuffer()
 
 void Game::Initialize()
 {
+	score[0] = score[1] = 0;
 	for (GameComponent* comp : gameComponents)
 	{
 		comp->Initialize();
@@ -101,6 +102,7 @@ void Game::Run()
 		context->OMSetRenderTargets(1, &rtv, nullptr);
 		
 		Draw();
+		Update();
 
 		context->OMSetRenderTargets(0, nullptr, nullptr);
 		
@@ -117,6 +119,14 @@ void Game::Draw()
 	for (GameComponent* comp : gameComponents)
 	{
 		comp->Draw();
+	}
+}
+
+void Game::Update()
+{
+	for (GameComponent* comp : gameComponents)
+	{
+		comp->Update();
 	}
 }
 
@@ -190,4 +200,14 @@ void Game::DestroyResources()
 void Game::Exit()
 {
 	DestroyResources();
+}
+
+void Game::UpdateScore(bool isLeft)
+{
+	score[isLeft] += 1;
+}
+
+void Game::PrintScore() const
+{
+	std::cout << score[0] << " : " << score[1] << std::endl;
 }

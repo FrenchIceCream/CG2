@@ -20,6 +20,8 @@ class Game
 {
 	void CreateBackBuffer();
 	bool isExitRequested;
+
+	int score[2];
 public:
 	
 	ID3D11Texture2D* backBuffer;
@@ -40,8 +42,12 @@ public:
 	void Initialize();
 	void Run();
 	void Draw();
+	void Update();
 	void MessageHandler();
 	void DestroyResources();
 	void Exit();
+
+	void UpdateScore(bool isLeft);
+	void PrintScore() const;
 };
 

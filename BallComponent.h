@@ -6,7 +6,7 @@
 
 using namespace DirectX::SimpleMath;
 
-class PaddleComponent : public GameComponent
+class BallComponent : public GameComponent
 {
 	ID3D11InputLayout* layout;
 	ID3D11RasterizerState* rastState;
@@ -20,24 +20,24 @@ class PaddleComponent : public GameComponent
 	UINT strides[1];
 	UINT offsets[1];
 
-	
 
-	bool isLeft;
+	DirectX::BoundingBox collider;
+
+	DirectX::BoundingBox topBox;
+	DirectX::BoundingBox bottomBox;
+	DirectX::BoundingBox leftBox;
+	DirectX::BoundingBox rightBox;
 
 public:
 
-	PaddleComponent(Game* game, bool isLeft) : GameComponent(game), isLeft(isLeft) {}
+	BallComponent(Game* game) : GameComponent(game){}
 
 	void Initialize() override;
 	void Draw() override;
 	virtual void DestroyResources() override;
 	virtual void Update() override;
 
-	bool IsLeft() { return isLeft; };
-
 	void AddY(float y) { data.offset.y += y; };
 	void AddX(float x) { data.offset.x += x; };
-
-	DirectX::BoundingBox collider;
 };
 

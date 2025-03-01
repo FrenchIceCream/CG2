@@ -36,7 +36,7 @@ float4 PSMain( PS_IN input ) : SV_Target
 	float4 col = input.col;
 #ifdef LEFT
 	col = float4(0.f, 0.f, 1.f, 1.f);
-#else
+#elif RIGHT
 	col = float4(1.f, 0.f, 0.f, 1.f);
 #endif
 

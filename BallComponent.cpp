@@ -1,17 +1,12 @@
 #include "pch.h"
-#include "PaddleComponent.h"
+#include "BallComponent.h"
 #include "Game.h"
 #include <directxmath.h>
+#include "PaddleComponent.h"
 //#include "DebugDraw.h"
 
-void PaddleComponent::Initialize()
+void BallComponent::Initialize()
 {
-	if (isLeft)
-		data.offset.x = -0.8;
-	else
-		data.offset.x = 0.8;
-
-
 	ID3DBlob* errorVertexCode = nullptr;
 
 	auto res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl",
@@ -40,11 +35,8 @@ void PaddleComponent::Initialize()
 		return;
 	}
 
-
-
-	D3D_SHADER_MACRO Shader_Macros[] = { isLeft? "LEFT": "RIGHT", "1", nullptr, nullptr};
 	ID3DBlob* errorPixelCode;
-		res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", Shader_Macros /*macros*/, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
+	res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", nullptr, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
 
 	game->device->CreateVertexShader(
 		vertexBC->GetBufferPointer(),
@@ -83,10 +75,10 @@ void PaddleComponent::Initialize()
 		&layout);
 
 	DirectX::XMFLOAT4 points[8] = {
-		DirectX::XMFLOAT4(0.03f, 0.2f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(-0.03f, -0.2f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT4(0.03f, -0.2f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(-0.03f, 0.2f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.1f, 0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.1f, -0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.1f, -0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.1f, 0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 	};
 
 	D3D11_BUFFER_DESC constBuffDesc;
@@ -144,23 +136,26 @@ void PaddleComponent::Initialize()
 
 
 
-	/*DirectX::BoundingBox::CreateFromPoints(collider, 
-		{ points[0].x + data.offset.x, points [0].y + data.offset.y, 0 },
-		{ points[1].x + data.offset.x, points[1].y + data.offset.y, 0 });*/
+	collider.Center.x = collider.Center.y = 0;
+	collider.Extents.x  = collider.Extents.y = 0.1;
 
-	collider.Center.x = isLeft ? -0.8f : 0.8f;
-	collider.Center.y = 0;
+	topBox.Center.x = bottomBox.Center.x = 0;
+	topBox.Extents.y = bottomBox.Extents.y = 0.01f;
+	topBox.Center.y = 1.f;
+	topBox.Extents.x = bottomBox.Extents.x = 1.f;
+	bottomBox.Center.y = -1.f;
 
-	collider.Extents.x = 0.03f;
-	collider.Extents.y = 0.2f;
 
-	collider.Center.z = 0;
-	collider.Extents.z = 0;
+	leftBox.Center.y = rightBox.Center.y = 0;
+	leftBox.Center.x = -1.f;
+	rightBox.Center.x = 1.f;
+	leftBox.Extents.y = rightBox.Extents.y = 1.f;
+	leftBox.Extents.x = rightBox.Extents.x = 0.01f;
 
-	std::cout << "hello";
+	//std::cout << "hello";
 }
 
-void PaddleComponent::Draw()
+void BallComponent::Draw()
 {
 	game->context->RSSetState(rastState);
 
@@ -193,7 +188,7 @@ void PaddleComponent::Draw()
 	game->context->DrawIndexed(6, 0, 0);
 }
 
-void PaddleComponent::DestroyResources()
+void BallComponent::DestroyResources()
 {
 	vertexShader->Release();
 	vertexBC->Release();
@@ -205,6 +200,48 @@ void PaddleComponent::DestroyResources()
 	ib->Release();
 }
 
-void PaddleComponent::Update()
+void BallComponent::Update()
 {
+	for (GameComponent* comp : game->gameComponents)
+	{
+		if (auto c = dynamic_cast<PaddleComponent*>(comp))
+		{
+			if (collider.Intersects(c->collider))
+				std::cout << "Collided";
+		}
+			
+	}
+
+	float dist = 2.f;
+
+	if (collider.Intersects(bottomBox))
+	{
+		//вот тут помен€ть движение м€ча
+		//std::cout << "bottom\n";
+	}
+	if (collider.Intersects(topBox))
+	{
+		//вот тут тоже помен€ть движение м€ча
+		//std::cout << "top\n";
+	}
+	if (collider.Intersects(leftBox))
+	{
+		game->UpdateScore(false);
+		game->PrintScore();
+		//std::cout << "left\n";
+	}
+	if (collider.Intersects(rightBox))
+	{
+		game->UpdateScore(true);
+		game->PrintScore();
+		//std::cout << "right\n";
+	}
+	
+	float deltaX = 0.005f;
+	float deltaY = 0.f;
+	data.offset.x += deltaX;
+	data.offset.y += deltaY;
+
+	collider.Transform(collider, 1, DirectX::FXMVECTOR{0,0,0,1}, DirectX::FXMVECTOR{deltaX,deltaY,0,0});
+	//std::cout << collider.Center.x << " " << collider.Center.y << "\n";
 }
