@@ -20,8 +20,7 @@ class PaddleComponent : public GameComponent
 	UINT strides[1];
 	UINT offsets[1];
 
-	float speed = 2;
-	
+	float a = 0.8;
 
 	bool isLeft;
 
@@ -36,7 +35,7 @@ public:
 
 	bool IsLeft() { return isLeft; };
 
-	void AddY(float y) { data.offset.y += y; };
+	void AddY(float y) { data.offset.y += y; collider.Center.y += y; };
 	//void AddX(float x) { data.offset.x += x; };
 
 	DirectX::BoundingBox collider;

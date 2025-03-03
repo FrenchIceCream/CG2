@@ -2,6 +2,7 @@
 #include "PaddleComponent.h"
 #include "Game.h"
 #include <directxmath.h>
+#include "InputDevice.h"
 //#include "DebugDraw.h"
 
 void PaddleComponent::Initialize()
@@ -150,8 +151,6 @@ void PaddleComponent::Initialize()
 
 	collider.Center.z = 0;
 	collider.Extents.z = 0;
-
-	std::cout << "hello";
 }
 
 void PaddleComponent::Draw()
@@ -201,5 +200,18 @@ void PaddleComponent::DestroyResources()
 
 void PaddleComponent::Update(float deltaTime)
 {
-
+	if (!isLeft)
+	{
+		if (InputDevice::inputInstance->IsKeyDown(Keys(38)))
+			AddY(a * deltaTime);
+		else if (InputDevice::inputInstance->IsKeyDown(Keys(40)))
+			AddY(-a * deltaTime);
+	}
+	else
+	{
+		if (InputDevice::inputInstance->IsKeyDown(Keys(87)))
+			AddY(a * deltaTime);
+		else if (InputDevice::inputInstance->IsKeyDown(Keys(83)))
+			AddY(-a * deltaTime);
+	}
 }

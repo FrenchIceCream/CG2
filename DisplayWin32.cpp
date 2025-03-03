@@ -10,7 +10,7 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 	case WM_KEYDOWN:
 	{
 		// If a key is pressed, send it to the input object so it can record that state.
-		std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
+		//std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
 
 		unsigned int keyCode = static_cast<unsigned int>(wparam);
 
@@ -24,7 +24,7 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 			PostMessage(hwnd, 87, wparam, lparam);
 			break;
 		case 83: //S
-			PostMessage(hwnd, 88, wparam, lparam);
+			PostMessage(hwnd, 83, wparam, lparam);
 			break;
 		case 38: //вверх
 			PostMessage(hwnd, VK_UP, wparam, lparam);
@@ -52,13 +52,14 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 
 		if (raw->header.dwType == RIM_TYPEKEYBOARD)
 		{
-			printf(" Kbd: make=%04i Flags:%04i Reserved:%04i ExtraInformation:%08i, msg=%04i VK=%i \n",
-				raw->data.keyboard.MakeCode,
-				raw->data.keyboard.Flags,
-				raw->data.keyboard.Reserved,
-				raw->data.keyboard.ExtraInformation,
-				raw->data.keyboard.Message,
-				raw->data.keyboard.VKey);
+
+			//printf(" Kbd: make=%04i Flags:%04i Reserved:%04i ExtraInformation:%08i, msg=%04i VK=%i \n",
+			//	raw->data.keyboard.MakeCode,
+			//	raw->data.keyboard.Flags,
+			//	raw->data.keyboard.Reserved,
+			//	raw->data.keyboard.ExtraInformation,
+			//	raw->data.keyboard.Message,
+			//	raw->data.keyboard.VKey);
 
 			InputDevice::inputInstance->OnKeyDown({
 				raw->data.keyboard.MakeCode,
@@ -69,7 +70,7 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 		}
 		else if (raw->header.dwType == RIM_TYPEMOUSE)
 		{
-			printf(" Mouse: X=%04d Y:%04d \n", raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+			/*printf(" Mouse: X=%04d Y:%04d \n", raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 			InputDevice::inputInstance->OnMouseMove({
 				raw->data.mouse.usFlags,
 				raw->data.mouse.usButtonFlags,
@@ -78,7 +79,7 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 				static_cast<short>(raw->data.mouse.usButtonData),
 				raw->data.mouse.lLastX,
 				raw->data.mouse.lLastY
-				});
+				});*/
 		}
 
 		delete[] lpb;

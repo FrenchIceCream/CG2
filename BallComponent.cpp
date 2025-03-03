@@ -10,6 +10,9 @@ void BallComponent::ResetBall()
 	data.offset.x = 0;
 	data.offset.y = 0;
 
+	a = std::rand() % 2 ? 1 : -1;
+	b = 0;
+
 	collider.Center.x = collider.Center.y = 0;
 	collider.Extents.x = collider.Extents.y = 0.05;
 }

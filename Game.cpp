@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "GameComponent.h"
 #include "PaddleComponent.h"
+#include "InputDevice.h"
+
 
 Game::Game(LPCWSTR applicationName, long clientWidth, long clientHeight)
 {
@@ -49,6 +51,8 @@ Game::Game(LPCWSTR applicationName, long clientWidth, long clientHeight)
 	}
 
 	CreateBackBuffer();
+
+	InputDevice::inputInstance = new InputDevice(this);
 }
 
 void Game::CreateBackBuffer()
@@ -145,61 +149,19 @@ void Game::MessageHandler()
 	}
 	if (msg.message == VK_UP)
 	{
-		for (GameComponent* comp : gameComponents)
-		{
-			if (auto c = dynamic_cast<PaddleComponent*>(comp))
-			{
-				if (!c->IsLeft())
-				{
-
-					c->AddY(0.03);
-					c->collider.Center.y += 0.03;
-				}
-			}
-		}
+		InputDevice::inputInstance->AddPressedKey(Keys(38));
 	}
 	if (msg.message == VK_DOWN)
 	{
-		for (GameComponent* comp : gameComponents)
-		{
-			if (auto c = dynamic_cast<PaddleComponent*>(comp))
-			{
-				if (!c->IsLeft())
-				{
-					c->AddY(-0.03);
-					c->collider.Center.y += -0.03;
-				}
-			}
-		}
+		InputDevice::inputInstance->AddPressedKey(Keys(40));
 	}
 	if (msg.message == (unsigned int)87)
 	{
-		for (GameComponent* comp : gameComponents)
-		{
-			if (auto c = dynamic_cast<PaddleComponent*>(comp))
-			{
-				if (c->IsLeft())
-				{
-					c->AddY(0.03);
-					c->collider.Center.y += 0.03;
-				}
-			}
-		}
+		InputDevice::inputInstance->AddPressedKey(Keys(87));
 	}
-	if (msg.message == 88)	//вот тут почему-то на 83 не реагирует - разобраться почему
+	if (msg.message == 83)
 	{
-		for (GameComponent* comp : gameComponents)
-		{
-			if (auto c = dynamic_cast<PaddleComponent*>(comp))
-			{
-				if (c->IsLeft())
-				{
-					std::cout << "levo";
-					c->AddY(-0.03);
-					c->collider.Center.y += -0.03;
-				}
-			}
-		}
+		InputDevice::inputInstance->AddPressedKey(Keys(83));
 	}
 }
 
