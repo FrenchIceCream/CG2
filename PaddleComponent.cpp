@@ -142,13 +142,7 @@ void PaddleComponent::Initialize()
 
 	res = game->device->CreateRasterizerState(&rastDesc, &rastState);
 
-
-
-	/*DirectX::BoundingBox::CreateFromPoints(collider, 
-		{ points[0].x + data.offset.x, points [0].y + data.offset.y, 0 },
-		{ points[1].x + data.offset.x, points[1].y + data.offset.y, 0 });*/
-
-	collider.Center.x = isLeft ? -0.8f : 0.8f;
+	collider.Center.x = data.offset.x;
 	collider.Center.y = 0;
 
 	collider.Extents.x = 0.03f;
@@ -205,6 +199,7 @@ void PaddleComponent::DestroyResources()
 	ib->Release();
 }
 
-void PaddleComponent::Update()
+void PaddleComponent::Update(float deltaTime)
 {
+
 }

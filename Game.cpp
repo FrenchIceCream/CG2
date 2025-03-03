@@ -102,7 +102,7 @@ void Game::Run()
 		context->OMSetRenderTargets(1, &rtv, nullptr);
 		
 		Draw();
-		Update();
+		Update(deltaTime);
 
 		context->OMSetRenderTargets(0, nullptr, nullptr);
 		
@@ -122,11 +122,11 @@ void Game::Draw()
 	}
 }
 
-void Game::Update()
+void Game::Update(float deltaTime)
 {
 	for (GameComponent* comp : gameComponents)
 	{
-		comp->Update();
+		comp->Update(deltaTime);
 	}
 }
 
@@ -150,7 +150,11 @@ void Game::MessageHandler()
 			if (auto c = dynamic_cast<PaddleComponent*>(comp))
 			{
 				if (!c->IsLeft())
+				{
+
 					c->AddY(0.03);
+					c->collider.Center.y += 0.03;
+				}
 			}
 		}
 	}
@@ -161,7 +165,10 @@ void Game::MessageHandler()
 			if (auto c = dynamic_cast<PaddleComponent*>(comp))
 			{
 				if (!c->IsLeft())
+				{
 					c->AddY(-0.03);
+					c->collider.Center.y += -0.03;
+				}
 			}
 		}
 	}
@@ -172,7 +179,10 @@ void Game::MessageHandler()
 			if (auto c = dynamic_cast<PaddleComponent*>(comp))
 			{
 				if (c->IsLeft())
+				{
 					c->AddY(0.03);
+					c->collider.Center.y += 0.03;
+				}
 			}
 		}
 	}
@@ -183,7 +193,11 @@ void Game::MessageHandler()
 			if (auto c = dynamic_cast<PaddleComponent*>(comp))
 			{
 				if (c->IsLeft())
+				{
+					std::cout << "levo";
 					c->AddY(-0.03);
+					c->collider.Center.y += -0.03;
+				}
 			}
 		}
 	}
@@ -209,5 +223,5 @@ void Game::UpdateScore(bool isLeft)
 
 void Game::PrintScore() const
 {
-	std::cout << score[0] << " : " << score[1] << std::endl;
+	std::cout << score[1] << " : " << score[0] << std::endl;
 }

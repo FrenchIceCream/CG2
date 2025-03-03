@@ -42,7 +42,7 @@ public:
 	void Initialize();
 	void Run();
 	void Draw();
-	void Update();
+	void Update(float deltaTime);
 	void MessageHandler();
 	void DestroyResources();
 	void Exit();

@@ -20,6 +20,7 @@ class PaddleComponent : public GameComponent
 	UINT strides[1];
 	UINT offsets[1];
 
+	float speed = 2;
 	
 
 	bool isLeft;
@@ -31,12 +32,12 @@ public:
 	void Initialize() override;
 	void Draw() override;
 	virtual void DestroyResources() override;
-	virtual void Update() override;
+	virtual void Update(float deltaTime) override;
 
 	bool IsLeft() { return isLeft; };
 
 	void AddY(float y) { data.offset.y += y; };
-	void AddX(float x) { data.offset.x += x; };
+	//void AddX(float x) { data.offset.x += x; };
 
 	DirectX::BoundingBox collider;
 };

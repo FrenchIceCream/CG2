@@ -28,6 +28,11 @@ class BallComponent : public GameComponent
 	DirectX::BoundingBox leftBox;
 	DirectX::BoundingBox rightBox;
 
+	float a;
+	float b;
+
+	bool lockScore;
+	void ResetBall();
 public:
 
 	BallComponent(Game* game) : GameComponent(game){}
@@ -35,7 +40,7 @@ public:
 	void Initialize() override;
 	void Draw() override;
 	virtual void DestroyResources() override;
-	virtual void Update() override;
+	virtual void Update(float deltaTime) override;
 
 	void AddY(float y) { data.offset.y += y; };
 	void AddX(float x) { data.offset.x += x; };

@@ -33,12 +33,11 @@ PS_IN VSMain( VS_IN input )
 
 float4 PSMain( PS_IN input ) : SV_Target
 {
-	float4 col = input.col;
+	float4 col = float4(1.f, 1.f, 1.f, 1.f);
 #ifdef LEFT
 	col = float4(0.f, 0.f, 1.f, 1.f);
 #elif RIGHT
 	col = float4(1.f, 0.f, 0.f, 1.f);
 #endif
-
 	return col;
 }

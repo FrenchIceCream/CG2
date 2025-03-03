@@ -159,7 +159,7 @@ void TriangleComponent::DestroyResources()
 	ib->Release();
 }
 
-void TriangleComponent::Update()
+void TriangleComponent::Update(float deltaTime)
 {
 }
 

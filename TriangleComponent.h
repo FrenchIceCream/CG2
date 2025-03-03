@@ -23,6 +23,6 @@ public:
 	void Initialize() override;
 	void Draw() override;
 	virtual void DestroyResources() override;
-	virtual void Update() override;
+	virtual void Update(float deltaTime) override;
 };
 

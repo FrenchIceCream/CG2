@@ -5,8 +5,33 @@
 #include "PaddleComponent.h"
 //#include "DebugDraw.h"
 
+void BallComponent::ResetBall()
+{
+	data.offset.x = 0;
+	data.offset.y = 0;
+
+	collider.Center.x = collider.Center.y = 0;
+	collider.Extents.x = collider.Extents.y = 0.05;
+}
+
 void BallComponent::Initialize()
 {
+	ResetBall();
+
+	a = 1;
+
+	topBox.Center.x = bottomBox.Center.x = 0;
+	topBox.Extents.y = bottomBox.Extents.y = 0.01f;
+	topBox.Center.y = 1.f;
+	topBox.Extents.x = bottomBox.Extents.x = 1.f;
+	bottomBox.Center.y = -1.f;
+
+	leftBox.Center.y = rightBox.Center.y = 0;
+	leftBox.Center.x = -1.f;
+	rightBox.Center.x = 1.f;
+	leftBox.Extents.y = rightBox.Extents.y = 1.f;
+	leftBox.Extents.x = rightBox.Extents.x = 0.01f;
+
 	ID3DBlob* errorVertexCode = nullptr;
 
 	auto res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl",
@@ -75,10 +100,10 @@ void BallComponent::Initialize()
 		&layout);
 
 	DirectX::XMFLOAT4 points[8] = {
-		DirectX::XMFLOAT4(0.1f, 0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(-0.1f, -0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-		DirectX::XMFLOAT4(0.1f, -0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
-		DirectX::XMFLOAT4(-0.1f, 0.1f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.05f, 0.05f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.05f, -0.05f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.05f, -0.05f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.05f, 0.05f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 	};
 
 	D3D11_BUFFER_DESC constBuffDesc;
@@ -133,26 +158,6 @@ void BallComponent::Initialize()
 	*offsets = 0;
 
 	res = game->device->CreateRasterizerState(&rastDesc, &rastState);
-
-
-
-	collider.Center.x = collider.Center.y = 0;
-	collider.Extents.x  = collider.Extents.y = 0.1;
-
-	topBox.Center.x = bottomBox.Center.x = 0;
-	topBox.Extents.y = bottomBox.Extents.y = 0.01f;
-	topBox.Center.y = 1.f;
-	topBox.Extents.x = bottomBox.Extents.x = 1.f;
-	bottomBox.Center.y = -1.f;
-
-
-	leftBox.Center.y = rightBox.Center.y = 0;
-	leftBox.Center.x = -1.f;
-	rightBox.Center.x = 1.f;
-	leftBox.Extents.y = rightBox.Extents.y = 1.f;
-	leftBox.Extents.x = rightBox.Extents.x = 0.01f;
-
-	//std::cout << "hello";
 }
 
 void BallComponent::Draw()
@@ -183,9 +188,14 @@ void BallComponent::Draw()
 	memcpy(dataPtr, &data, sizeof(ConstData));
 	game->context->Unmap(constantBuffer, 0);
 	game->context->VSSetConstantBuffers(0, 1, &constantBuffer);
-
-
+	
 	game->context->DrawIndexed(6, 0, 0);
+
+	if (lockScore)
+	{
+		
+		lockScore = false;
+	}
 }
 
 void BallComponent::DestroyResources()
@@ -200,48 +210,59 @@ void BallComponent::DestroyResources()
 	ib->Release();
 }
 
-void BallComponent::Update()
+void BallComponent::Update(float deltaTime)
 {
 	for (GameComponent* comp : game->gameComponents)
 	{
 		if (auto c = dynamic_cast<PaddleComponent*>(comp))
 		{
 			if (collider.Intersects(c->collider))
-				std::cout << "Collided";
+			{
+				DirectX::SimpleMath::Vector2 vec(collider.Center.x - c->collider.Center.x, collider.Center.y - c->collider.Center.y);
+				vec.Normalize();
+				a =  vec.x;
+				b = vec.y;
+			}
 		}
 			
 	}
+
+	if (lockScore)
+		return;
 
 	float dist = 2.f;
 
 	if (collider.Intersects(bottomBox))
 	{
-		//вот тут помен€ть движение м€ча
-		//std::cout << "bottom\n";
+		b = -b;
 	}
 	if (collider.Intersects(topBox))
 	{
-		//вот тут тоже помен€ть движение м€ча
-		//std::cout << "top\n";
+		b = -b;
 	}
 	if (collider.Intersects(leftBox))
 	{
 		game->UpdateScore(false);
 		game->PrintScore();
+		ResetBall();
+		lockScore = true;
 		//std::cout << "left\n";
 	}
 	if (collider.Intersects(rightBox))
 	{
 		game->UpdateScore(true);
 		game->PrintScore();
+		ResetBall();
+		lockScore = true;
 		//std::cout << "right\n";
 	}
 	
-	float deltaX = 0.005f;
-	float deltaY = 0.f;
-	data.offset.x += deltaX;
-	data.offset.y += deltaY;
+	float deltaX = a * deltaTime;
+	float deltaY = b * deltaTime;
+	data.offset.x = data.offset.x + deltaX;
+	data.offset.y = data.offset.y + deltaY;
 
-	collider.Transform(collider, 1, DirectX::FXMVECTOR{0,0,0,1}, DirectX::FXMVECTOR{deltaX,deltaY,0,0});
-	//std::cout << collider.Center.x << " " << collider.Center.y << "\n";
+	collider.Center.x = collider.Center.x + deltaX;
+	collider.Center.y = collider.Center.y + deltaY;
+	//std::cout << collider.Center.x << "\n";
 }
