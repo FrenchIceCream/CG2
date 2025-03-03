@@ -13,6 +13,8 @@ void BallComponent::ResetBall()
 	a = std::rand() % 2 ? 1 : -1;
 	b = 0;
 
+	speed = 0.5;
+
 	collider.Center.x = collider.Center.y = 0;
 	collider.Extents.x = collider.Extents.y = 0.05;
 }
@@ -20,8 +22,6 @@ void BallComponent::ResetBall()
 void BallComponent::Initialize()
 {
 	ResetBall();
-
-	a = 1;
 
 	topBox.Center.x = bottomBox.Center.x = 0;
 	topBox.Extents.y = bottomBox.Extents.y = 0.01f;
@@ -225,6 +225,7 @@ void BallComponent::Update(float deltaTime)
 				vec.Normalize();
 				a =  vec.x;
 				b = vec.y;
+				speed += 0.1;
 			}
 		}
 			
@@ -260,8 +261,8 @@ void BallComponent::Update(float deltaTime)
 		//std::cout << "right\n";
 	}
 	
-	float deltaX = a * deltaTime;
-	float deltaY = b * deltaTime;
+	float deltaX = a * speed * deltaTime;
+	float deltaY = b * speed *deltaTime;
 	data.offset.x = data.offset.x + deltaX;
 	data.offset.y = data.offset.y + deltaY;
 

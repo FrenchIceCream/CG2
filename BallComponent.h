@@ -31,6 +31,8 @@ class BallComponent : public GameComponent
 	float a;
 	float b;
 
+	float speed;
+
 	bool lockScore;
 	void ResetBall();
 public:
