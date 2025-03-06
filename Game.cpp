@@ -163,6 +163,22 @@ void Game::MessageHandler()
 	{
 		InputDevice::inputInstance->AddPressedKey(Keys(83));
 	}
+	if (msg.message == 83)
+	{
+		InputDevice::inputInstance->AddPressedKey(Keys(83));
+	}
+	if (msg.message == 83)
+	{
+		InputDevice::inputInstance->AddPressedKey(Keys(83));
+	}
+	if (msg.message == 83)
+	{
+		InputDevice::inputInstance->AddPressedKey(Keys(83));
+	}
+	if (msg.message == 83)
+	{
+		InputDevice::inputInstance->AddPressedKey(Keys(83));
+	}
 }
 
 void Game::DestroyResources()
@@ -181,6 +197,13 @@ void Game::Exit()
 void Game::UpdateScore(bool isLeft)
 {
 	score[isLeft] += 1;
+
+	if (score[0] >= 5 || score[1] >= 5)
+	{
+		std::string num = (score[0] > score[1]) ? "2" : "1";
+		std::cout << "Player " << num << " won" << std::endl;;
+		score[0] = score[1] = 0;
+	}
 }
 
 void Game::PrintScore() const

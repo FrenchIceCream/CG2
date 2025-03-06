@@ -10,7 +10,7 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 	case WM_KEYDOWN:
 	{
 		// If a key is pressed, send it to the input object so it can record that state.
-		//std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
+		std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
 
 		unsigned int keyCode = static_cast<unsigned int>(wparam);
 
@@ -31,6 +31,19 @@ LRESULT CALLBACK DisplayWin32::WndProc(HWND hwnd, UINT umessage, WPARAM wparam, 
 			break;
 		case 40: //вниз
 			PostMessage(hwnd, VK_DOWN, wparam, lparam);
+			break;
+
+		case 37:
+			PostMessage(hwnd, 37, wparam, lparam);
+			break;
+		case 39: 
+			PostMessage(hwnd, 39, wparam, lparam);
+			break;
+		case 65: 
+			PostMessage(hwnd, 65, wparam, lparam);
+			break;
+		case 68: 
+			PostMessage(hwnd, 68, wparam, lparam);
 			break;
 		default:
 			break;

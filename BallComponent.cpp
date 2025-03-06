@@ -13,7 +13,7 @@ void BallComponent::ResetBall()
 	a = std::rand() % 2 ? 1 : -1;
 	b = 0;
 
-	speed = 0.5;
+	speed = 0.8;
 
 	collider.Center.x = collider.Center.y = 0;
 	collider.Extents.x = collider.Extents.y = 0.05;
@@ -35,10 +35,12 @@ void BallComponent::Initialize()
 	leftBox.Extents.y = rightBox.Extents.y = 1.f;
 	leftBox.Extents.x = rightBox.Extents.x = 0.01f;
 
+	D3D_SHADER_MACRO Shader_Macros[] = { "BALL", "1", nullptr, nullptr };
+
 	ID3DBlob* errorVertexCode = nullptr;
 
 	auto res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl",
-		nullptr /*macros*/,
+		Shader_Macros,
 		nullptr /*include*/,
 		"VSMain",
 		"vs_5_0",
@@ -63,8 +65,10 @@ void BallComponent::Initialize()
 		return;
 	}
 
+	
+
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", nullptr, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
+	res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", Shader_Macros, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
 
 	game->device->CreateVertexShader(
 		vertexBC->GetBufferPointer(),
@@ -191,7 +195,8 @@ void BallComponent::Draw()
 	memcpy(dataPtr, &data, sizeof(ConstData));
 	game->context->Unmap(constantBuffer, 0);
 	game->context->VSSetConstantBuffers(0, 1, &constantBuffer);
-	
+	game->context->PSSetConstantBuffers(0, 1, &constantBuffer);
+
 	game->context->DrawIndexed(6, 0, 0);
 
 	if (lockScore)
@@ -227,8 +232,7 @@ void BallComponent::Update(float deltaTime)
 				b = vec.y;
 				speed += 0.1;
 			}
-		}
-			
+		}		
 	}
 
 	if (lockScore)
@@ -264,6 +268,7 @@ void BallComponent::Update(float deltaTime)
 	float deltaX = a * speed * deltaTime;
 	float deltaY = b * speed *deltaTime;
 	data.offset.x = data.offset.x + deltaX;
+	//std::cout << 700 - (data.offset.y + 1) * 350.f << std::endl;
 	data.offset.y = data.offset.y + deltaY;
 
 	collider.Center.x = collider.Center.x + deltaX;

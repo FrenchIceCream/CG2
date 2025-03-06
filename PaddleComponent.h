@@ -21,6 +21,7 @@ class PaddleComponent : public GameComponent
 	UINT offsets[1];
 
 	float a = 0.8;
+	float b = 0.5;
 
 	bool isLeft;
 
@@ -36,7 +37,7 @@ public:
 	bool IsLeft() { return isLeft; };
 
 	void AddY(float y) { data.offset.y += y; collider.Center.y += y; };
-	//void AddX(float x) { data.offset.x += x; };
+	void AddX(float x) { data.offset.x += x; collider.Center.x += x; };
 
 	DirectX::BoundingBox collider;
 };

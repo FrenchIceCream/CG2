@@ -11,7 +11,8 @@
 
 int main()
 {
-	Game * MyGame = new Game(L"Pong", 800, 800);
+	srand(std::time(NULL));
+	Game * MyGame = new Game(L"Pong", 700, 700);
 
 	MyGame->gameComponents.push_back(new PaddleComponent(MyGame, true));
 	MyGame->gameComponents.push_back(new PaddleComponent(MyGame, false));
@@ -19,5 +20,6 @@ int main()
 
 	MyGame->Run();
 
-    std::cout << "Hello World!\n";
+    std::cout << "\nFINAL SCORE: ";
+	MyGame->PrintScore();
 }

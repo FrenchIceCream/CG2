@@ -39,5 +39,15 @@ float4 PSMain( PS_IN input ) : SV_Target
 #elif RIGHT
 	col = float4(1.f, 0.f, 0.f, 1.f);
 #endif
+	
+	#ifdef BALL
+    float dx = input.pos.x - (ConstData.offset.x + 1) * 350;
+    float dy = input.pos.y - (700 - (ConstData.offset.y + 1) * 350);	
+    if(dx * dx + dy * dy <= 300)
+        col =  float4(1.0f, 1.0f, 1.0f, 1.0f);
+    else
+        col = float4(0.1f, 0.1f, 0.1f, 1.0f);
+	#endif
+
 	return col;
 }

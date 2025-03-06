@@ -148,9 +148,6 @@ void PaddleComponent::Initialize()
 
 	collider.Extents.x = 0.03f;
 	collider.Extents.y = 0.2f;
-
-	collider.Center.z = 0;
-	collider.Extents.z = 0;
 }
 
 void PaddleComponent::Draw()
@@ -206,6 +203,11 @@ void PaddleComponent::Update(float deltaTime)
 			AddY(a * deltaTime);
 		else if (InputDevice::inputInstance->IsKeyDown(Keys(40)))
 			AddY(-a * deltaTime);
+
+		if (InputDevice::inputInstance->IsKeyDown(Keys(37)))
+			AddX(-b * deltaTime);
+		else if (InputDevice::inputInstance->IsKeyDown(Keys(39)))
+			AddX(b * deltaTime);
 	}
 	else
 	{
@@ -213,5 +215,9 @@ void PaddleComponent::Update(float deltaTime)
 			AddY(a * deltaTime);
 		else if (InputDevice::inputInstance->IsKeyDown(Keys(83)))
 			AddY(-a * deltaTime);
+		if (InputDevice::inputInstance->IsKeyDown(Keys(65))) //A
+			AddX(-b * deltaTime);
+		else if (InputDevice::inputInstance->IsKeyDown(Keys(68))) //D
+			AddX(b * deltaTime);
 	}
 }
